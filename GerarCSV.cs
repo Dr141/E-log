@@ -4,7 +4,7 @@ using System.IO;
 
 namespace E_log
 {
-    class GerarCSV
+    public class GerarCSV
     {
         public string nomeArquivo { get; private set; }
 
