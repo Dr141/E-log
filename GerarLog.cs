@@ -3,9 +3,11 @@ using System.IO;
 
 namespace E_log
 {
-    public class GerarLog
+    public class GerarLog : IDisposable
     {
         public string nomeArquivo { get; private set; }
+        private FileStream file;
+        private StreamWriter writer;
 
         public bool InicaArquivo()
         {
@@ -15,7 +17,7 @@ namespace E_log
             {
                 if (!File.Exists(this.nomeArquivo))
                 {
-                    FileStream file = new FileStream(nomeArquivo, FileMode.Create);
+                    file = new FileStream(nomeArquivo, FileMode.Create);
                     file.Close();
                 }
                 return true;
@@ -30,12 +32,16 @@ namespace E_log
         {
             if (this.InicaArquivo())
             {
-                FileStream file = new FileStream(nomeArquivo, FileMode.Append);
-                StreamWriter writer = new StreamWriter(file);
-                writer.WriteLine(DateTime.Now.ToString() + ". " + mensagem);
-                writer.Close();
-                file.Close();
+                file = new FileStream(nomeArquivo, FileMode.Append);
+                writer = new StreamWriter(file);
+                writer.WriteLine(DateTime.Now.ToString() + ". " + mensagem);                
             }
+        }
+
+        public void Dispose()
+        {
+            writer.Close();
+            file.Close();
         }
     }
 }
